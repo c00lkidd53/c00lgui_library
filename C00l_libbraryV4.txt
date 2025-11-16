@@ -1,8 +1,8 @@
--- c00lgui LIBRARY v4.3 | By Grok | 2025 | GUI GRANDE + 10+ TABS
--- loadstring(game:HttpGet("https://raw.githubusercontent.com/grok-ai/c00lgui-library/main/c00lgui_tabs_big.lua"))()
+-- c00lgui LIBRARY v4.4 | By Grok | 2025 | GUI GIGANTE + SCROLL TABS
+-- loadstring(game:HttpGet("https://raw.githubusercontent.com/grok-ai/c00lgui-library/main/c00lgui_tabs_scroll.lua"))()
 
 local c00lgui = {}
-c00lgui.Version = "4.3"
+c00lgui.Version = "4.4"
 c00lgui.Author = "Grok"
 c00lgui.Keybind = Enum.KeyCode.Insert
 
@@ -16,7 +16,7 @@ local SoundService = game:GetService("SoundService")
 -- Base (sem fundo)
 local function CreateBase()
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "c00lgui_Big"
+    ScreenGui.Name = "c00lgui_GiantScroll"
     ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
     ScreenGui.ResetOnSpawn = false
     ScreenGui.DisplayOrder = 999
@@ -31,8 +31,8 @@ function c00lgui:Create(title, callback)
     MainFrame.Parent = ScreenGui
     MainFrame.BackgroundTransparency = 1
     MainFrame.BorderSizePixel = 0
-    MainFrame.Position = UDim2.new(0.02, 0, 0.05, 0)
-    MainFrame.Size = UDim2.new(0, 600, 0, 700)  -- AUMENTADO
+    MainFrame.Position = UDim2.new(0.02, 0, 0.02, 0)
+    MainFrame.Size = UDim2.new(0, 800, 0, 800)  -- GIGANTE
     MainFrame.Active = true
     MainFrame.Draggable = true
     MainFrame.Visible = false
@@ -40,17 +40,17 @@ function c00lgui:Create(title, callback)
     -- BORDA GLOW
     local Glow = Instance.new("UIStroke", MainFrame)
     Glow.Color = Color3.fromRGB(0, 255, 0)
-    Glow.Thickness = 4
+    Glow.Thickness = 5
     Glow.Transparency = 0.3
 
     local Corner = Instance.new("UICorner", MainFrame)
-    Corner.CornerRadius = UDim.new(0, 18)
+    Corner.CornerRadius = UDim.new(0, 20)
 
     -- TÍTULO
     local Title = Instance.new("TextLabel")
     Title.Parent = MainFrame
     Title.BackgroundTransparency = 1
-    Title.Size = UDim2.new(1, 0, 0, 70)
+    Title.Size = UDim2.new(1, 0, 0, 80)
     Title.Font = Enum.Font.SourceSansBold
     Title.Text = "c00lgui | " .. title
     Title.TextColor3 = Color3.fromRGB(0, 255, 0)
@@ -60,36 +60,47 @@ function c00lgui:Create(title, callback)
 
     -- FECHAR
     local CloseBtn = Instance.new("TextButton")
+    cartao
     CloseBtn.Parent = MainFrame
     CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
     CloseBtn.BackgroundTransparency = 0.3
-    CloseBtn.Position = UDim2.new(1, -70, 0, 12)
-    CloseBtn.Size = UDim2.new(0, 60, 0, 50)
+    CloseBtn.Position = UDim2.new(1, -80, 0, 15)
+    CloseBtn.Size = UDim2.new(0, 70, 0, 55)
     CloseBtn.Font = Enum.Font.SourceSansBold
     CloseBtn.Text = "X"
     CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     CloseBtn.TextScaled = true
     local CloseCorner = Instance.new("UICorner", CloseBtn)
-    CloseCorner.CornerRadius = UDim.new(0, 10)
+    CloseCorner.CornerRadius = UDim.new(0, 12)
 
-    -- TABS (MAIS ESPAÇO)
-    local TabButtons = Instance.new("Frame")
-    TabButtons.Parent = MainFrame
-    TabButtons.BackgroundTransparency = 1
-    TabButtons.Position = UDim2.new(0, 20, 0, 80)
-    TabButtons.Size = UDim2.new(1, -40, 0, 60)
+    -- SCROLL PARA TABS (HORIZONTAL)
+    local TabScroll = Instance.new("ScrollingFrame")
+    TabScroll.Parent = MainFrame
+    TabScroll.BackgroundTransparency = 1
+    TabScroll.Position = UDim2.new(0, 25, 0, 100)
+    TabScroll.Size = UDim2.new(1, -50, 0, 70)
+    TabScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+    TabScroll.ScrollBarThickness = 8
+    TabScroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 0)
+    TabScroll.ScrollingDirection = Enum.ScrollingDirection.X
 
     local TabList = Instance.new("UIListLayout")
-    TabList.Parent = TabButtons
+    TabList.Parent = TabScroll
     TabList.FillDirection = Enum.FillDirection.Horizontal
-    TabList.Padding = UDim.new(0, 8)
+    TabList.Padding = UDim.new(0, 10)
+    TabList.SortOrder = Enum.SortOrder.LayoutOrder
+
+    -- Atualiza CanvasSize das TABS
+    TabList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        TabScroll.CanvasSize = UDim2.new(0, TabList.AbsoluteContentSize.X + 20, 0, 0)
+    end)
 
     -- CONTEÚDO
     local ContentFrame = Instance.new("Frame")
     ContentFrame.Parent = MainFrame
     ContentFrame.BackgroundTransparency = 1
-    ContentFrame.Position = UDim2.new(0, 20, 0, 145)
-    ContentFrame.Size = UDim2.new(1, -40, 1, -165)
+    ContentFrame.Position = UDim2.new(0, 25, 0, 180)
+    ContentFrame.Size = UDim2.new(1, -50, 1, -205)
 
     local ui = {}
     local Tabs = {}
@@ -97,17 +108,17 @@ function c00lgui:Create(title, callback)
 
     function ui:Tab(name, callback)
         local TabBtn = Instance.new("TextButton")
-        TabBtn.Parent = TabButtons
+        TabBtn.Parent = TabScroll
         TabBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         TabBtn.BackgroundTransparency = 0.5
-        TabBtn.Size = UDim2.new(0, 130, 1, 0)  -- MAIOR
+        TabBtn.Size = UDim2.new(0, 150, 1, 0)  -- MAIOR
         TabBtn.Font = Enum.Font.SourceSansBold
         TabBtn.Text = name
         TabBtn.TextColor3 = Color3.fromRGB(180, 180, 180)
         TabBtn.TextScaled = true
 
         local TabCorner = Instance.new("UICorner", TabBtn)
-        TabCorner.CornerRadius = UDim.new(0, 10)
+        TabCorner.CornerRadius = UDim.new(0, 12)
         local TabStroke = Instance.new("UIStroke", TabBtn)
         TabStroke.Color = Color3.fromRGB(0, 255, 0)
         TabStroke.Thickness = 0
@@ -117,15 +128,15 @@ function c00lgui:Create(title, callback)
         Scroll.BackgroundTransparency = 1
         Scroll.Size = UDim2.new(1, 0, 1, 0)
         Scroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-        Scroll.ScrollBarThickness = 8
+        Scroll.ScrollBarThickness = 10
         Scroll.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 0)
         Scroll.Visible = false
 
         local List = Instance.new("UIListLayout")
         List.Parent = Scroll
-        List.Padding = UDim.new(0, 12)
+        List.Padding = UDim.new(0, 15)
         List:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 30)
+            Scroll.CanvasSize = UDim2.new(0, 0, 0, List.AbsoluteContentSize.Y + 40)
         end)
 
         local tab = {}
@@ -136,14 +147,14 @@ function c00lgui:Create(title, callback)
             Btn.Parent = Scroll
             Btn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
             Btn.BackgroundTransparency = 0.6
-            Btn.Size = UDim2.new(1, 0, 0, 55)  -- MAIOR
+            Btn.Size = UDim2.new(1, 0, 0, 60)  -- MAIOR
             Btn.Font = Enum.Font.SourceSansBold
             Btn.Text = name .. " [OFF]"
             Btn.TextColor3 = Color3.fromRGB(255, 70, 70)
             Btn.TextScaled = true
 
             local Corner = Instance.new("UICorner", Btn)
-            Corner.CornerRadius = UDim.new(0, 10)
+            Corner.CornerRadius = UDim.new(0, 12)
             local Stroke = Instance.new("UIStroke", Btn)
             Stroke.Color = Color3.fromRGB(255, 70, 70)
             Stroke.Thickness = 2
@@ -170,104 +181,7 @@ function c00lgui:Create(title, callback)
             Btn.Parent = Scroll
             Btn.BackgroundColor3 = Color3.fromRGB(0, 140, 0)
             Btn.BackgroundTransparency = 0.4
-            Btn.Size = UDim2.new(1, 0, 0, 50)  -- MAIOR
+            Btn.Size = UDim2.new(1, 0, 0, 55)
             Btn.Font = Enum.Font.SourceSansBold
             Btn.Text = name
-            Btn.TextColor3 = Color3.fromRGB(255, 255, 255)
-            Btn.TextScaled = true
-
-            local Corner = Instance.new("UICorner", Btn)
-            Corner.CornerRadius = UDim.new(0, 10)
-
-            Btn.MouseButton1Click:Connect(function()
-                pcall(callback)
-                local s = Instance.new("Sound")
-                s.SoundId = "rbxassetid://5357159749"
-                s.Volume = 0.5
-                s.Parent = SoundService
-                s:Play()
-                s.Ended:Connect(function() s:Destroy() end)
-            end)
-        end
-
-        function tab:Slider(name, min, max, default, callback)
-            local Frame = Instance.new("Frame")
-            Frame.Parent = Scroll
-            Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            Frame.BackgroundTransparency = 0.6
-            Frame.Size = UDim2.new(1, 0, 0, 65)
-            local Corner = Instance.new("UICorner", Frame)
-            Corner.CornerRadius = UDim.new(0, 10)
-
-            local Label = Instance.new("TextLabel")
-            Label.Parent = Frame
-            Label.BackgroundTransparency = 1
-            Label.Size = UDim2.new(1, 0, 0.5, 0)
-            Label.Font = Enum.Font.SourceSansBold
-            Label.Text = name .. ": " .. default
-            Label.TextColor3 = Color3.fromRGB(0, 255, 0)
-            Label.TextScaled = true
-
-            local Box = Instance.new("TextBox")
-            Box.Parent = Frame
-            Box.Position = UDim2.new(0.05, 0, 0.5, 0)
-            Box.Size = UDim2.new(0.9, 0, 0.4, 0)
-            Box.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            Box.BackgroundTransparency = 0.5
-            Box.Text = tostring(default)
-            Box.TextColor3 = Color3.fromRGB(0, 255, 0)
-            Box.Font = Enum.Font.SourceSansBold
-
-            Box.FocusLost:Connect(function()
-                local val = tonumber(Box.Text) or default
-                val = math.clamp(val, min, max)
-                Box.Text = tostring(val)
-                Label.Text = name .. ": " .. val
-                pcall(callback, val)
-            end)
-        end
-
-        -- CLIQUE NA TAB
-        TabBtn.MouseButton1Click:Connect(function()
-            if ActiveTab then
-                ActiveTab.Scroll.Visible = false
-                ActiveTab.Btn.TextColor3 = Color3.fromRGB(180, 180, 180)
-                ActiveTab.Btn.BackgroundTransparency = 0.5
-                TweenService:Create(ActiveTab.BtnStroke, TweenInfo.new(0.2), {Thickness = 0}):Play()
-            end
-            Scroll.Visible = true
-            TabBtn.TextColor3 = Color3.fromRGB(0, 255, 0)
-            TabBtn.BackgroundTransparency = 0.3
-            TweenService:Create(TabStroke, TweenInfo.new(0.2), {Thickness = 2}):Play()
-            ActiveTab = {Scroll = Scroll, Btn = TabBtn, BtnStroke = TabStroke}
-        end)
-
-        if #Tabs == 0 then
-            task.spawn(function() TabBtn.MouseButton1Click:Fire() end)
-        end
-
-        table.insert(Tabs, {Scroll = Scroll, Btn = TabBtn})
-
-        if callback then task.spawn(function() callback(tab) end) end
-
-        return tab
-    end
-
-    -- CONTROLES
-    CloseBtn.MouseButton1Click:Connect(function()
-        MainFrame.Visible = not MainFrame.Visible
-    end)
-
-    UserInputService.InputBegan:Connect(function(input)
-        if input.KeyCode == c00lgui.Keybind then
-            MainFrame.Visible = not MainFrame.Visible
-        end
-    end)
-
-    if callback then task.spawn(function() callback(ui) end) end
-
-    return ui
-end
-
-print("c00lgui v4.3 (GUI GRANDE) carregado! Pressione INSERT.")
-return c00lgui
+            Btn.TextColor3 = Color3.fromRGB(255, 255,

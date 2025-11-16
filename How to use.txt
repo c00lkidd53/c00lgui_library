@@ -1,5 +1,5 @@
 --//C00lgui V3\\--
-local c00lgui = loadstring(game:HttpGet("https://raw.githubusercontent.com/grok-ai/c00lgui-library/main/library.lua"))()
+local c00lgui = loadstring(game:HttpGet("https://github.com/c00lkidd53/c00lgui_library/raw/refs/heads/main/C00llibraryV3.lua"))()
 c00lgui:Create("NAME HERE", function(ui)--Name here
 
 ui:Toggle("ESP Survivors", function(state) --State is Toggle (Can be false or true).

@@ -1,8 +1,8 @@
--- c00lgui LIBRARY v4.0
--- loadstring(game:HttpGet("https://raw.githubusercontent.com/grok-ai/c00lgui-library/main/c00lgui_tabs.lua"))()
+-- c00lgui LIBRARY v4.1 | By Grok | 2025 | TABS + NO MATRIX BG
+-- loadstring(game:HttpGet("https://raw.githubusercontent.com/grok-ai/c00lgui-library/main/c00lgui_tabs_nobg.lua"))()
 
 local c00lgui = {}
-c00lgui.Version = "4.0"
+c00lgui.Version = "4.1"
 c00lgui.Author = "Grok"
 c00lgui.Keybind = Enum.KeyCode.Insert
 
@@ -13,39 +13,21 @@ local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
 local SoundService = game:GetService("SoundService")
 
--- Base GUI
+-- Base GUI (SEM Matrix)
 local function CreateBase()
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "c00lgui_Tabs"
+    ScreenGui.Name = "c00lgui_NoBG"
     ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
     ScreenGui.ResetOnSpawn = false
     ScreenGui.DisplayOrder = 999
 
-    -- Matrix Rain
-    local MatrixBG = Instance.new("Frame")
-    MatrixBG.Name = "MatrixBG"
-    MatrixBG.Parent = ScreenGui
-    MatrixBG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    MatrixBG.Size = UDim2.new(1, 0, 1, 0)
-    MatrixBG.ZIndex = 0
-    task.spawn(function()
-        while MatrixBG.Parent do
-            local lbl = Instance.new("TextLabel", MatrixBG)
-            lbl.Text = string.char(math.random(33, 126))
-            lbl.TextColor3 = Color3.fromRGB(0, math.random(150, 255), 0)
-            lbl.Font = Enum.Font.Code
-            lbl.TextSize = math.random(10, 16)
-            lbl.Position = UDim2.new(math.random(), 0, 0, 0)
-            lbl.BackgroundTransparency = 1
-            lbl.Size = UDim2.new(0, 12, 0, 12)
-            TweenService:Create(lbl, TweenInfo.new(math.random(3, 6), Enum.EasingStyle.Linear), {
-                Position = UDim2.new(math.random(), 0, 1, 0),
-                TextTransparency = 1
-            }):Play()
-            game:GetService("Debris"):AddItem(lbl, 6)
-            task.wait(0.07)
-        end
-    end)
+    -- Fundo preto sólido (sem chuva)
+    local BG = Instance.new("Frame")
+    BG.Name = "SolidBG"
+    BG.Parent = ScreenGui
+    BG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    BG.Size = UDim2.new(1, 0, 1, 0)
+    BG.ZIndex = 0
 
     return ScreenGui
 end
@@ -56,7 +38,7 @@ function c00lgui:Create(title, callback)
     local MainFrame = Instance.new("Frame")
     MainFrame.Name = "MainFrame"
     MainFrame.Parent = ScreenGui
-    MainFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 8)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)  -- Preto suave
     MainFrame.BorderSizePixel = 0
     MainFrame.Position = UDim2.new(0.02, 0, 0.1, 0)
     MainFrame.Size = UDim2.new(0, 380, 0, 550)
@@ -66,8 +48,8 @@ function c00lgui:Create(title, callback)
 
     local Glow = Instance.new("UIStroke", MainFrame)
     Glow.Color = Color3.fromRGB(0, 255, 0)
-    Glow.Thickness = 4
-    Glow.Transparency = 0.35
+    Glow.Thickness = 3
+    Glow.Transparency = 0.4
 
     local Corner = Instance.new("UICorner", MainFrame)
     Corner.CornerRadius = UDim.new(0, 16)
@@ -94,7 +76,7 @@ function c00lgui:Create(title, callback)
     local CloseCorner = Instance.new("UICorner", CloseBtn)
     CloseCorner.CornerRadius = UDim.new(0, 8)
 
-    -- Tab Buttons Frame
+    -- Tab Buttons
     local TabButtons = Instance.new("Frame")
     TabButtons.Parent = MainFrame
     TabButtons.BackgroundTransparency = 1
@@ -106,7 +88,7 @@ function c00lgui:Create(title, callback)
     TabList.FillDirection = Enum.FillDirection.Horizontal
     TabList.Padding = UDim.new(0, 5)
 
-    -- Content Frame
+    -- Content
     local ContentFrame = Instance.new("Frame")
     ContentFrame.Parent = MainFrame
     ContentFrame.BackgroundTransparency = 1
@@ -117,15 +99,14 @@ function c00lgui:Create(title, callback)
     local Tabs = {}
     local ActiveTab = nil
 
-    -- Criar Tab
     function ui:Tab(name, callback)
         local TabBtn = Instance.new("TextButton")
         TabBtn.Parent = TabButtons
-        TabBtn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        TabBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
         TabBtn.Size = UDim2.new(0, 100, 1, 0)
         TabBtn.Font = Enum.Font.SourceSansBold
         TabBtn.Text = name
-        TabBtn.TextColor3 = Color3.fromRGB(150, 150, 150)
+        TabBtn.TextColor3 = Color3.fromRGB(180, 180, 180)
         TabBtn.TextScaled = true
 
         local TabCorner = Instance.new("UICorner", TabBtn)
@@ -133,9 +114,7 @@ function c00lgui:Create(title, callback)
         local TabStroke = Instance.new("UIStroke", TabBtn)
         TabStroke.Color = Color3.fromRGB(0, 255, 0)
         TabStroke.Thickness = 0
-        TabStroke.Transparency = 1
 
-        -- Content Scroll
         local Scroll = Instance.new("ScrollingFrame")
         Scroll.Parent = ContentFrame
         Scroll.BackgroundTransparency = 1
@@ -158,24 +137,24 @@ function c00lgui:Create(title, callback)
             local state = default or false
             local Btn = Instance.new("TextButton")
             Btn.Parent = Scroll
-            Btn.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+            Btn.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
             Btn.Size = UDim2.new(1, 0, 0, 45)
             Btn.Font = Enum.Font.SourceSansBold
-            Btn.Text = name .. " [OFF]"
-            Btn.TextColor3 = Color3.fromRGB(255, 50, 50)
+            Btn.Text = name .." [OFF]"
+            Btn.TextColor3 = Color3.fromRGB(255, 70, 70)
             Btn.TextScaled = true
 
             local Corner = Instance.new("UICorner", Btn)
             Corner.CornerRadius = UDim.new(0, 8)
             local Stroke = Instance.new("UIStroke", Btn)
-            Stroke.Color = Color3.fromRGB(255, 50, 50)
+            Stroke.Color = Color3.fromRGB(255, 70, 70)
             Stroke.Thickness = 2
 
             Btn.MouseButton1Click:Connect(function()
                 state = not state
                 Btn.Text = name .. (state and " [ON]" or " [OFF]")
-                Btn.TextColor3 = state and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 50, 50)
-                Stroke.Color = state and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 50, 50)
+                Btn.TextColor3 = state and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 70, 70)
+                Stroke.Color = state and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 70, 70)
                 pcall(callback, state)
                 local s = Instance.new("Sound")
                 s.SoundId = "rbxassetid://131961136"
@@ -185,15 +164,13 @@ function c00lgui:Create(title, callback)
                 s.Ended:Connect(function() s:Destroy() end)
             end)
 
-            if default then
-                task.spawn(function() Btn.MouseButton1Click:Fire() end)
-            end
+            if default then task.spawn(function() Btn.MouseButton1Click:Fire() end) end
         end
 
         function tab:Button(name, callback)
             local Btn = Instance.new("TextButton")
             Btn.Parent = Scroll
-            Btn.BackgroundColor3 = Color3.fromRGB(0, 130, 0)
+            Btn.BackgroundColor3 = Color3.fromRGB(0, 140, 0)
             Btn.Size = UDim2.new(1, 0, 0, 40)
             Btn.Font = Enum.Font.SourceSansBold
             Btn.Text = name
@@ -217,7 +194,7 @@ function c00lgui:Create(title, callback)
         function tab:Slider(name, min, max, default, callback)
             local Frame = Instance.new("Frame")
             Frame.Parent = Scroll
-            Frame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+            Frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
             Frame.Size = UDim2.new(1, 0, 0, 55)
             local Corner = Instance.new("UICorner", Frame)
             Corner.CornerRadius = UDim.new(0, 8)
@@ -235,7 +212,7 @@ function c00lgui:Create(title, callback)
             Box.Parent = Frame
             Box.Position = UDim2.new(0.05, 0, 0.5, 0)
             Box.Size = UDim2.new(0.9, 0, 0.4, 0)
-            Box.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            Box.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
             Box.Text = tostring(default)
             Box.TextColor3 = Color3.fromRGB(0, 255, 0)
             Box.Font = Enum.Font.SourceSans
@@ -249,36 +226,31 @@ function c00lgui:Create(title, callback)
             end)
         end
 
-        -- Tab Click
         TabBtn.MouseButton1Click:Connect(function()
             if ActiveTab then
                 ActiveTab.Scroll.Visible = false
-                ActiveTab.Btn.TextColor3 = Color3.fromRGB(150, 150, 150)
-                ActiveTab.Btn.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+                ActiveTab.Btn.TextColor3 = Color3.fromRGB(180, 180, 180)
+                ActiveTab.Btn.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
                 TweenService:Create(ActiveTab.BtnStroke, TweenInfo.new(0.2), {Thickness = 0}):Play()
             end
             Scroll.Visible = true
             TabBtn.TextColor3 = Color3.fromRGB(0, 255, 0)
-            TabBtn.BackgroundColor3 = Color3.fromRGB(10, 40, 10)
+            TabBtn.BackgroundColor3 = Color3.fromRGB(10, 45, 10)
             TweenService:Create(TabStroke, TweenInfo.new(0.2), {Thickness = 2}):Play()
             ActiveTab = {Scroll = Scroll, Btn = TabBtn, BtnStroke = TabStroke}
         end)
 
-        -- Auto-select first tab
         if #Tabs == 0 then
             task.spawn(function() TabBtn.MouseButton1Click:Fire() end)
         end
 
         table.insert(Tabs, {Scroll = Scroll, Btn = TabBtn})
 
-        if callback then
-            task.spawn(function() callback(tab) end)
-        end
+        if callback then task.spawn(function() callback(tab) end) end
 
         return tab
     end
 
-    -- Controls
     CloseBtn.MouseButton1Click:Connect(function()
         MainFrame.Visible = not MainFrame.Visible
     end)
@@ -289,11 +261,10 @@ function c00lgui:Create(title, callback)
         end
     end)
 
-    if callback then
-        task.spawn(function() callback(ui) end)
-    end
+    if callback then task.spawn(function() callback(ui) end) end
 
     return ui
 end
 
+print("c00lgui v4.1 (SEM FUNDO) carregado! Pressione INSERT.")
 return c00lgui

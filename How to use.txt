@@ -9,3 +9,7 @@ end)
 ui:Button("Kill All", function() ... end)
 --Another function
 end)
+
+ui:Slider("Walk Speed", 16, 200, 16, function(speed)
+        -- Here the function
+end)

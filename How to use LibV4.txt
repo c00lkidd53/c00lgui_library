@@ -1,0 +1,33 @@
+local c00lgui = loadstring(game:HttpGet("https://github.com/c00lkidd53/c00lgui_library/raw/refs/heads/main/C00l_libbraryV4.txt"))()
+
+c00lgui:Create("Ultimate", function(ui)
+    ui:Tab("Visual", function(tab)
+        tab:Toggle("ESP Survivors", false, function(state)
+            -- ESP code
+        end)
+        tab:Toggle("No Fog", false, function(state)
+            game.Lighting.Atmosphere.Density = state and 0 or 0.3
+        end)
+        tab:Slider("FOV", 70, 120, 70, function(val)
+            workspace.CurrentCamera.FieldOfView = val
+        end)
+    end)
+
+    ui:Tab("Combat", function(tab)
+        tab:Toggle("Kill Aura", false, function(state)
+            -- Kill aura
+        end)
+        tab:Button("Kill All", function()
+            -- Kill all
+        end)
+    end)
+
+    ui:Tab("Misc", function(tab)
+        tab:Button("Auto Win", function()
+            -- Auto gens + gates
+        end)
+        tab:Toggle("Fly", false, function(state)
+            -- Fly
+        end)
+    end)
+end)
